@@ -4,13 +4,13 @@ A personal LeetCode problem tracker with spaced repetition review, built with Ne
 
 ## Features
 
-- 🌈 **Customizable Color Theme**: Beautiful pastel palette for a pleasant experience.
-- 🔍 **Add Problems Easily**: Search and add LeetCode problems with tags and difficulty.
-- ⏰ **Spaced Repetition**: Review schedule follows a spaced repetition curve (1, 3, 7, 14, 30, 60 days).
-- 📅 **Review Today**: See which problems you need to review today.
-- ✅ **Already Finished**: Track all problems you have finished, with review count.
-- 🏷️ **Tags & Difficulty**: Each problem displays tags and difficulty for easy filtering.
-- 💾 **Local Storage**: All your data is saved in your browser (localStorage).
+-  **Customizable Color Theme**: Beautiful pastel palette for a pleasant experience.
+-  **Add Problems Easily**: Search and add LeetCode problems with tags and difficulty.
+-  **Spaced Repetition**: Review schedule follows a spaced repetition curve (1, 3, 7, 14, 30, 60 days).
+-  **Review Today**: See which problems you need to review today.
+-  **Already Finished**: Track all problems you have finished, with review count.
+-  **Tags & Difficulty**: Each problem displays tags and difficulty for easy filtering.
+-  **Local Storage**: All your data is saved in your browser (localStorage).
 
 ## Getting Started
 
@@ -57,11 +57,3 @@ npm run export
 ```
 
 Then deploy the `out/` directory to GitHub Pages.
-
-## License
-
-MIT
-
----
-
-Made with ❤️ by [HsuanChi1204](https://github.com/HsuanChi1204) 
