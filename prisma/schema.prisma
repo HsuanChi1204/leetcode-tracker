@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Problem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  difficulty  String   // Easy, Medium, Hard
+  category    String   // Array, String, etc.
+  tags        String   // Comma separated tags
+  url         String
+  notes       String?
+  timeComplexity String?
+  spaceComplexity String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  reviews     Review[]
+  mockInterviews MockInterview[]
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  problem     Problem  @relation(fields: [problemId], references: [id])
+  problemId   Int
+  date        DateTime @default(now())
+  performance Int      // 1-5 rating
+  notes       String?
+  nextReviewDate DateTime
+}
+
+model MockInterview {
+  id          Int      @id @default(autoincrement())
+  problem     Problem  @relation(fields: [problemId], references: [id])
+  problemId   Int
+  date        DateTime @default(now())
+  timeSpent   Int      // in minutes
+  performance Int      // 1-5 rating
+  notes       String?
+} 
