@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { format, addDays, parse } from 'date-fns';
 import { problems as leetcodeProblems } from '../data/leetcodeProblems';
+import Link from 'next/link';
 
 interface Problem {
   id: string;
@@ -14,6 +15,7 @@ interface Problem {
   tags: string[];
   reviewCount: number;
   isEditing?: boolean; // 新增用於控制卡片內編輯狀態
+  solution?: string; // 用於儲存解題思路的程式碼
 }
 
 interface ManualAddProblem {
@@ -410,14 +412,12 @@ export default function Home() {
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-3">
-                          <a 
-                            href={problem.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link 
+                            href={`/problem/${problem.id}`}
                             className="text-lg font-medium text-primary-3 hover:text-primary-4"
                           >
                             {problem.name}
-                          </a>
+                          </Link>
                           <span className="bg-primary-5 text-primary-3 px-2 py-1 rounded-full text-xs">
                             Reviewed {problem.reviewCount} times
                           </span>
@@ -568,14 +568,12 @@ export default function Home() {
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-3">
-                          <a 
-                            href={problem.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link 
+                            href={`/problem/${problem.id}`}
                             className="text-lg font-medium text-primary-3 hover:text-primary-4"
                           >
                             {problem.name}
-                          </a>
+                          </Link>
                           <span className="bg-primary-5 text-primary-3 px-2 py-1 rounded-full text-xs">
                             Reviewed {problem.reviewCount} times
                           </span>
