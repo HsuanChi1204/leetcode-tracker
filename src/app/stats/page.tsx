@@ -1,3 +1,12 @@
+// This is a server component
+export async function generateStaticParams() {
+  return []; // Empty array since this is a single page
+}
+
+export default function StatsPage() {
+  return <StatsClient />;
+}
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,12 +32,7 @@ interface DailyStats {
   reviewedProblems: Problem[];
 }
 
-// This function is required for static site generation
-export async function generateStaticParams() {
-  return []; // Empty array since this is a single page
-}
-
-export default function StatsPage() {
+function StatsClient() {
   const router = useRouter();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
