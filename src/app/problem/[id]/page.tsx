@@ -19,6 +19,13 @@ interface Problem {
   solution?: string; // New field for storing the solution code
 }
 
+// This function is required for static site generation with dynamic routes
+export async function generateStaticParams() {
+  // Since we can't access localStorage during build, we return an empty array
+  // The pages will be generated at runtime when users visit them
+  return []; 
+}
+
 export default function ProblemDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [problem, setProblem] = useState<Problem | null>(null);

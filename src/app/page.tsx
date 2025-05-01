@@ -208,7 +208,15 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-primary-1 p-8">
       <div className="max-w-4xl mx-auto space-y-10">
-        <h1 className="text-4xl font-bold mb-8 text-primary-3">LeetCode Review Tracker</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-4xl font-bold text-primary-3">LeetCode Review Tracker</h1>
+          <Link 
+            href="/stats" 
+            className="bg-primary-3 text-white px-4 py-2 rounded-lg hover:bg-primary-4 transition-colors"
+          >
+            View Progress Stats
+          </Link>
+        </div>
         
         {/* Add New Problem Section */}
         <section className="bg-white p-6 rounded-lg shadow-md">
