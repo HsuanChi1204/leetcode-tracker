@@ -10,6 +10,7 @@ A personal LeetCode problem tracker with spaced repetition review, built with Ne
 -  **Review Today**: See which problems you need to review today.
 -  **Already Finished**: Track all problems you have finished, with review count.
 -  **Tags & Difficulty**: Each problem displays tags and difficulty for easy filtering.
+-  **Progress Statistics**: View your problem-solving progress and completion rates.
 -  **Local Storage**: All your data is saved in your browser (localStorage).
 
 ## Getting Started
@@ -40,6 +41,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 - **Add a problem**: Use the search bar to find and add a LeetCode problem.
 - **Review**: Click the "Review" button to update the review date and follow the spaced repetition schedule.
 - **Track progress**: The "Already Finished" section shows all problems you have added, with the number of times reviewed.
+- **View Statistics**: Visit the `/stats` page to see your problem-solving progress and completion rates.
 
 ## Customization
 
@@ -48,12 +50,25 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ## Deployment
 
-You can deploy this app to Vercel, Netlify, or GitHub Pages.  
-For GitHub Pages (static export):
+This app is automatically deployed to GitHub Pages using GitHub Actions. The deployment process is triggered on every push to the `main` branch.
 
+### Live Demo
+
+Visit the live demo at: [https://hsuanchi1204.github.io/leetcode-tracker](https://hsuanchi1204.github.io/leetcode-tracker)
+
+### Manual Deployment
+
+If you want to deploy manually:
+
+1. Build the project:
 ```bash
 npm run build
-npm run export
 ```
 
-Then deploy the `out/` directory to GitHub Pages.
+2. The static files will be generated in the `out/` directory.
+
+3. Deploy the `out/` directory to your hosting service.
+
+## Contributing
+
+Feel free to submit issues and enhancement requests!
