@@ -7,16 +7,16 @@ import { highlight, languages } from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/themes/prism.css';
 
-interface Problem {
+export interface Problem {
   id: string;
-  name: string;
-  url: string;
-  lastReviewDate: string;
-  nextReviewDate: string;
+  title: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   tags: string[];
+  notes: string;
+  solution: string;
+  lastReviewed: string;
+  nextReview: string;
   reviewCount: number;
-  solution?: string; // New field for storing the solution code
 }
 
 export default function ProblemClient({ id }: { id: string }) {
@@ -110,7 +110,7 @@ export default function ProblemClient({ id }: { id: string }) {
         {/* Problem header */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-3xl font-bold text-primary-3">{problem.name}</h1>
+            <h1 className="text-3xl font-bold text-primary-3">{problem.title}</h1>
             <button
               onClick={handleGoBack}
               className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
@@ -133,21 +133,10 @@ export default function ProblemClient({ id }: { id: string }) {
                 </span>
               </p>
               <p className="mb-2">
-                <span className="font-semibold">URL:</span>{' '}
-                <a 
-                  href={problem.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline"
-                >
-                  Open Problem
-                </a>
+                <span className="font-semibold">Last Review:</span> {problem.lastReviewed}
               </p>
               <p className="mb-2">
-                <span className="font-semibold">Last Review:</span> {problem.lastReviewDate}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Next Review:</span> {problem.nextReviewDate}
+                <span className="font-semibold">Next Review:</span> {problem.nextReview}
               </p>
               <p className="mb-2">
                 <span className="font-semibold">Review Count:</span> {problem.reviewCount}
