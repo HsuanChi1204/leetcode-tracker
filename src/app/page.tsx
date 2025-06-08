@@ -16,6 +16,7 @@ interface Problem {
   reviewCount: number;
   isEditing?: boolean; // 新增用於控制卡片內編輯狀態
   solution?: string; // 用於儲存解題思路的程式碼
+  reviewSchedule?: string[]; // 完整的複習時間表 (7次複習的日期)
 }
 
 interface ManualAddProblem {
@@ -33,8 +34,23 @@ function getNextReviewInterval(reviewCount: number): number {
     case 2: return 7;  // Third review: after 7 days
     case 3: return 14; // Fourth review: after 14 days
     case 4: return 30; // Fifth review: after 30 days
-    default: return 60; // Sixth and later reviews: after 60 days
+    case 5: return 60; // Sixth review: after 60 days
+    default: return 120; // Seventh and later reviews: after 120 days
   }
+}
+
+// Generate complete review schedule (7 reviews)
+function generateReviewSchedule(startDate: Date): string[] {
+  const schedule: string[] = [];
+  let currentDate = new Date(startDate);
+  
+  for (let i = 0; i < 7; i++) {
+    const interval = getNextReviewInterval(i);
+    currentDate = addDays(currentDate, interval);
+    schedule.push(format(currentDate, 'yyyy-MM-dd'));
+  }
+  
+  return schedule;
 }
 
 function getInitialProblems(): Problem[] {
@@ -68,15 +84,49 @@ export default function Home() {
       setSearchResults([]);
       return;
     }
-    const results = leetcodeProblems.filter(problem => 
-      problem.name.toLowerCase().includes(query.toLowerCase())
-    );
+    
+    const queryLower = query.toLowerCase().trim();
+    const results = leetcodeProblems.filter(problem => {
+      // 搜尋題目名稱
+      const nameMatch = problem.name.toLowerCase().includes(queryLower);
+      
+      // 搜尋題目號碼（支援 "1", "#1", "leetcode 1" 等格式）
+      const numberMatch = problem.id === queryLower || 
+                         problem.id === queryLower.replace('#', '') ||
+                         queryLower.includes(problem.id);
+      
+      // 搜尋標籤
+      const tagMatch = problem.tags.some(tag => 
+        tag.toLowerCase().includes(queryLower)
+      );
+      
+      return nameMatch || numberMatch || tagMatch;
+    });
+    
+    // 按相關性排序：完全匹配的題目號碼優先，然後是名稱匹配，最後是標籤匹配
+    results.sort((a, b) => {
+      const aIdMatch = a.id === queryLower || a.id === queryLower.replace('#', '');
+      const bIdMatch = b.id === queryLower || b.id === queryLower.replace('#', '');
+      
+      if (aIdMatch && !bIdMatch) return -1;
+      if (!aIdMatch && bIdMatch) return 1;
+      
+      const aNameMatch = a.name.toLowerCase().includes(queryLower);
+      const bNameMatch = b.name.toLowerCase().includes(queryLower);
+      
+      if (aNameMatch && !bNameMatch) return -1;
+      if (!aNameMatch && bNameMatch) return 1;
+      
+      return 0;
+    });
+    
     setSearchResults(results);
   };
 
   const addProblem = (selectedProblem: typeof leetcodeProblems[0]) => {
     const today = new Date();
     const nextReview = addDays(today, 1); // First review after 1 day
+    const reviewSchedule = generateReviewSchedule(today);
 
     const newProblemData: Problem = {
       id: selectedProblem.id,
@@ -87,6 +137,7 @@ export default function Home() {
       difficulty: selectedProblem.difficulty,
       tags: selectedProblem.tags,
       reviewCount: 0,
+      reviewSchedule: reviewSchedule,
     };
 
     setProblems(prev => {
@@ -123,15 +174,19 @@ export default function Home() {
 
   const handleManualAdd = (event: React.FormEvent) => {
     event.preventDefault();
+    const today = new Date();
+    const reviewSchedule = generateReviewSchedule(today);
+    
     const newProblem: Problem = {
       id: Date.now().toString(),
       name: manualAdd.name,
       url: manualAdd.url,
       difficulty: manualAdd.difficulty,
       tags: manualAdd.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''),
-      lastReviewDate: format(new Date(), 'yyyy-MM-dd'),
-      nextReviewDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
-      reviewCount: 0
+      lastReviewDate: format(today, 'yyyy-MM-dd'),
+      nextReviewDate: format(addDays(today, 1), 'yyyy-MM-dd'),
+      reviewCount: 0,
+      reviewSchedule: reviewSchedule,
     };
 
     setProblems(prev => {
@@ -296,7 +351,7 @@ export default function Home() {
                   setNewProblem(e.target.value);
                   handleSearch(e.target.value);
                 }}
-                placeholder="Search for a problem..."
+                placeholder="Search by problem name, number (#1, 242), or tags..."
                 className="w-full p-3 border border-primary-2 rounded-lg focus:outline-none focus:border-primary-3"
               />
               {searchResults.length > 0 && (
@@ -307,7 +362,7 @@ export default function Home() {
                       onClick={() => addProblem(result)}
                       className="p-3 hover:bg-primary-1 cursor-pointer border-b border-primary-2"
                     >
-                      <div className="font-medium">{result.name}</div>
+                      <div className="font-medium">#{result.id}. {result.name}</div>
                       <div className="text-sm text-gray-600">
                         <span className={`
                           inline-block px-2 py-1 rounded-full text-xs mr-2
@@ -458,12 +513,12 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <button
-                          onClick={() => reviewProblem(problem.id)}
-                          className="bg-primary-3 text-white px-4 py-2 rounded-lg hover:bg-primary-4 transition-colors"
+                        <Link
+                          href={`/problem/${problem.id}`}
+                          className="bg-primary-3 text-white px-4 py-2 rounded-lg hover:bg-primary-4 transition-colors inline-block text-center"
                         >
                           Review
-                        </button>
+                        </Link>
                         <button
                           onClick={() => toggleEditProblem(problem.id)}
                           className="bg-yellow-500 text-white px-3 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
@@ -612,6 +667,7 @@ export default function Home() {
                             className="ml-1 p-1 border border-primary-2 rounded"
                           />
                         </div>
+
                       </div>
                       <div className="flex space-x-2">
                         <button
